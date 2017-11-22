@@ -11,7 +11,7 @@ magic-free client backed by plain-old fetch. Inspired by
 
 In the near future these are the planned additional features:
 
-* [ ] integration with [graphql_ppx]()
+* [ ] integration with [graphql_ppx](https://github.com/mhallin/graphql_ppx)
 * [ ] Cache queries/requests
 * [ ] Optimistic Updates
 
