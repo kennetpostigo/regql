@@ -1,6 +1,6 @@
 # Regql
 
-GraphQL Client in [ReasonML](https://reasonml.github.io). Stupid simple,
+GraphQL Client in Pure [ReasonML](https://reasonml.github.io). Stupid simple,
 magic-free client backed by plain-old fetch. Inspired by
 [reason-apollo](https://github.com/Gregoirevda/reason-apollo).
 
@@ -34,8 +34,7 @@ module Client = Regql.Create({
 #### Create a query
 
 ```reason
-let query =
-  gql {|
+let query = {|
     query getUser {
       name
     }
