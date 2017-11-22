@@ -1,5 +1,8 @@
 # Regql
 
+[![version](https://img.shields.io/npm/v/regql.svg?style=flat-square)](http://npm.im/regql)
+[![MIT License](https://img.shields.io/npm/l/regql.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+
 GraphQL Client in Pure [ReasonML](https://reasonml.github.io). Stupid simple,
 magic-free client backed by plain-old fetch. Inspired by
 [reason-apollo](https://github.com/Gregoirevda/reason-apollo).
