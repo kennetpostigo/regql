@@ -1,6 +1,6 @@
 {
   "name": "regql",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "reason graphql",
   "main": "index.js",
   "author": "Kennet Postigo <kennetfpostigo@gmail.com>",
