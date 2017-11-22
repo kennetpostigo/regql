@@ -9,18 +9,17 @@ module Create = (NetworkConfig: NetworkConfig, ContainerConfig: ContainerConfig)
   type state =
     | Loading
     | Loaded(ContainerConfig.shape)
-    | Failed(string);
+    | Failed(Js.Promise.error);
   type action =
     | Result(ContainerConfig.shape)
-    | Error(string);
+    | Error(Js.Promise.error);
   let component = ReasonReact.reducerComponent("Gql");
   let make = (~query, ~variables=None, children) => {
     ...component,
     initialState: () => Loading,
     reducer: (action, _state) =>
       switch action {
-      | Result(result) =>
-        ReasonReact.UpdateWithSideEffects(Loaded(result), ((self) => Js.log(self.state)))
+      | Result(result) => ReasonReact.Update(Loaded(result))
       | Error(error) => ReasonReact.Update(Failed(error))
       },
     didMount: ({reduce}) => {
@@ -29,12 +28,18 @@ module Create = (NetworkConfig: NetworkConfig, ContainerConfig: ContainerConfig)
         | Some(variables) =>
           switch (Js.Json.stringifyAny({"query": query, "variables": variables})) {
           | Some(next) => Fetch.BodyInit.make(next)
-          | None => Fetch.BodyInit.make("")
+          | None =>
+            failwith(
+              "Regql: when making the request the query/mutation variables we're malformed. Please check the variables Js.t passed in doesn't hold function values or any values not supported in Json"
+            )
           }
         | None =>
           switch (Js.Json.stringifyAny({"query": query})) {
           | Some(next) => Fetch.BodyInit.make(next)
-          | None => Fetch.BodyInit.make("")
+          | None =>
+            failwith(
+              "Regql: when making the request the query/mutation variables we're malformed. Please check the variables Js.t passed in doesn't hold function values or any values not supported in Json"
+            )
           }
         };
       Js.Promise.(
@@ -59,12 +64,12 @@ module Create = (NetworkConfig: NetworkConfig, ContainerConfig: ContainerConfig)
              }
            )
         |> catch(
-             (_value) => {
-               Js.log(_value);
-               reduce(() => Error("an error happened"), ());
+             (err) => {
+               reduce(() => Error(err), ());
                resolve()
              }
            )
+        |> ignore
       );
       ReasonReact.NoUpdate
     },
