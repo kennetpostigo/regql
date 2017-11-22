@@ -1,4 +1,4 @@
-module type NetworkConfig = {let uri: string; let token: string = "";};
+module type NetworkConfig = {let uri: string;};
 
 module type ContainerConfig = {type shape; type variables; let decoder: Js.Json.t => shape;};
 
@@ -45,8 +45,7 @@ module Create = (NetworkConfig: NetworkConfig, ContainerConfig: ContainerConfig)
             ~headers=
               Fetch.HeadersInit.make({
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": NetworkConfig.token
+                "Content-Type": "application/json"
               }),
             ~body,
             ()
