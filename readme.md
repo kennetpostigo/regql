@@ -17,9 +17,10 @@ yarn install regql
 
 ```json
 "bs-dependencies": [
+  "reason-react",
+  "bs-fetch",
   "bs-json",
-  "regql",
-  "reason-react"
+  "regql"
 ]
 ```
 
