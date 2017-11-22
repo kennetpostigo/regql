@@ -7,10 +7,18 @@ GraphQL Client in Pure [ReasonML](https://reasonml.github.io). Stupid simple,
 magic-free client backed by plain-old fetch. Inspired by
 [reason-apollo](https://github.com/Gregoirevda/reason-apollo).
 
+## RoadMap
+
+In the near future these are the planned additional features:
+
+* [ ] integration with [graphql_ppx]()
+* [ ] Cache queries/requests
+* [ ] Optimistic Updates
+
 ## Install
 
 ```bash
-yarn install regql
+yarn add regql
 ```
 
 ## bsconfig
