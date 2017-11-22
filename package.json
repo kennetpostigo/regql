@@ -1,15 +1,18 @@
 {
   "name": "regql",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "reason graphql",
   "main": "index.js",
-  "repository": "https://github.com/kennetpostigo/regql",
   "author": "Kennet Postigo <kennetfpostigo@gmail.com>",
   "license": "MIT",
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kennetpostigo/regql.git"
   },
   "devDependencies": {
     "bs-platform": "^2.0.0"
