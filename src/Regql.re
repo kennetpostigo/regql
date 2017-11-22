@@ -2,6 +2,8 @@ module type NetworkConfig = {let uri: string;};
 
 module type ContainerConfig = {type shape; type variables; let decoder: Js.Json.t => shape;};
 
+external errToString : Js.Promise.error => string = "%identity";
+
 module Create = (NetworkConfig: NetworkConfig, ContainerConfig: ContainerConfig) => {
   type data = {data: ContainerConfig.shape};
   let decoder = (json) : data =>
@@ -9,10 +11,10 @@ module Create = (NetworkConfig: NetworkConfig, ContainerConfig: ContainerConfig)
   type state =
     | Loading
     | Loaded(ContainerConfig.shape)
-    | Failed(Js.Promise.error);
+    | Failed(string);
   type action =
     | Result(ContainerConfig.shape)
-    | Error(Js.Promise.error);
+    | Error(string);
   let component = ReasonReact.reducerComponent("Gql");
   let make = (~query, ~variables=None, children) => {
     ...component,
@@ -65,7 +67,7 @@ module Create = (NetworkConfig: NetworkConfig, ContainerConfig: ContainerConfig)
            )
         |> catch(
              (err) => {
-               reduce(() => Error(err), ());
+               reduce(() => Error("Regql " ++ errToString(err)), ());
                resolve()
              }
            )
