@@ -1,6 +1,7 @@
 # Regql
 
 [![version](https://img.shields.io/npm/v/regql.svg?style=flat-square)](http://npm.im/regql)
+[![downloads](https://img.shields.io/npm/dm/regql.svg?style=flat-square)](http://npm-stat.com/charts.html?package=regql)
 [![MIT License](https://img.shields.io/npm/l/regql.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 
 GraphQL Client in Pure [ReasonML](https://reasonml.github.io). Stupid simple,
