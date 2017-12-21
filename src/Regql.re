@@ -2,17 +2,17 @@ type query =
   | OnMount
   | OnQuery;
 
-module type NetworkConfig = {let uri: string;};
+module type Network = {let uri: string;};
 
-module type ContainerConfig = {
+module type Container = {
   type shape;
   type variables;
   let decoder: Js.Json.t => shape;
   let runQuery: query;
 };
 
-module Create = (NetworkConfig: NetworkConfig, ContainerConfig: ContainerConfig) => {
-  switch ContainerConfig.runQuery {
+module Create = (Network: Network, Container: Container) => {
+  switch Container.runQuery {
   | OnMount => OnMountComp.Create(ContainerConfig)
   | OnQuery => OnQueryComp.Create(ContainerConfig)
   };
