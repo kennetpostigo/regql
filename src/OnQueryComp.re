@@ -1,4 +1,4 @@
-module Create = (Container: CompTypes.Container) => {
+module Create = (Container: CompTypes.Component) => {
   type state =
     | Idle
     | Loading
@@ -9,7 +9,7 @@ module Create = (Container: CompTypes.Container) => {
     | Fired
     | Error(string);
   let component = ReasonReact.reducerComponent("Container");
-  let make = (uri, token, query, children) => {
+  let make = (~query, ~variables=None, children) => {
     ...component,
     initialState: () => Idle,
     reducer: (action, _state) =>
@@ -21,7 +21,7 @@ module Create = (Container: CompTypes.Container) => {
     render: ({state, reduce}) => {
       let onQuery = () => {
         reduce(() => Fired, ());
-        Transport.run(uri, token, query)
+        Transport.run(Container.uri, Container.token, query, variables, Container.decoder)
         |> Js.Promise.then_(
              (data) => {
                reduce(() => Result(data), ());

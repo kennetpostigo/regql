@@ -1,4 +1,4 @@
-module Create = (Container: CompTypes.Container) => {
+module Create = (Container: CompTypes.Component) => {
   type state =
     | Loading
     | Loaded(Container.shape)
@@ -7,7 +7,7 @@ module Create = (Container: CompTypes.Container) => {
     | Result(Container.shape)
     | Error(string);
   let component = ReasonReact.reducerComponent("Container");
-  let make = (uri, token, query, children) => {
+  let make = (~query, ~variables=None, children) => {
     ...component,
     initialState: () => Loading,
     reducer: (action, _state) =>
@@ -16,7 +16,7 @@ module Create = (Container: CompTypes.Container) => {
       | Error(error) => ReasonReact.Update(Failed(error))
       },
     didMount: ({state, reduce}) => {
-      Transport.run(uri, token, query)
+      Transport.run(Container.uri, Container.token, query, variables, Container.decoder)
       |> Js.Promise.then_(
            (data) => {
              reduce(() => Result(data), ());
@@ -26,6 +26,17 @@ module Create = (Container: CompTypes.Container) => {
       |> ignore;
       ReasonReact.NoUpdate
     },
-    render: ({state}) => children[0](state)
+    render: ({state, reduce}) => {
+      let onQuery = () =>
+        Transport.run(Container.uri, Container.token, query, variables, Container.decoder)
+        |> Js.Promise.then_(
+             (data) => {
+               reduce(() => Result(data), ());
+               Js.Promise.resolve(state)
+             }
+           )
+        |> ignore;
+      children[0](state, onQuery)
+    }
   };
 };
