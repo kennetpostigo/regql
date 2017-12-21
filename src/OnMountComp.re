@@ -1,4 +1,9 @@
-module type Container = {type shape; type variables; let decoder: Js.Json.t => shape;};
+module type Container = {
+  type shape;
+  type variables;
+  let decoder: Js.Json.t => shape;
+  let runQuery: CompTypes.query;
+};
 
 module Create = (Container: Container) => {
   type state =
