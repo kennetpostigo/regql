@@ -16,10 +16,12 @@ module Create = (Network: Network, Container: Container) => {
     let uri = Network.uri;
     let token = Network.token;
   };
-  let onMount: (module CompTypes.Sig) = (module OnMountComp.Create(Component));
-  let onQuery: (module CompTypes.Sig) = (module OnQueryComp.Create(Component));
   switch Container.runQuery {
-  | OnMount => onMount
-  | OnQuery => onQuery
+  | OnMount =>
+    let onMount: (module CompTypes.Sig) = (module OnMountComp.Create(Component));
+    onMount
+  | OnQuery =>
+    let onQuery: (module CompTypes.Sig) = (module OnQueryComp.Create(Component));
+    onQuery
   };
 };

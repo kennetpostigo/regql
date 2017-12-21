@@ -8,7 +8,8 @@
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
-    "clean": "bsb -clean-world"
+    "clean": "bsb -clean-world",
+    "inter": "bsc lib/bs/src/Regql.cmi "
   },
   "repository": {
     "type": "git",
