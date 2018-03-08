@@ -1,26 +1,17 @@
+let cache = ref(Cache.empty);
+
 external errToString : Js.Promise.error => string = "%identity";
 
-exception ReGqlError(string);
+exception RegqlError(string);
 
-let run = (uri, token, query, variables, decoder) => {
+let run = (uri: string, token: string, query: string, variables: Js.Json.t) => {
   let body =
-    switch variables {
-    | Some(variables) =>
-      switch (Js.Json.stringifyAny({"query": query, "variables": variables})) {
-      | Some(next) => Fetch.BodyInit.make(next)
-      | None =>
-        failwith(
-          "Regql: when making the request the query/mutation variables we're malformed. Please check the variables Js.t passed in doesn't hold function values or any values not supported in Json"
-        )
-      }
+    switch (Js.Json.stringifyAny({"query": query, "variables": variables})) {
+    | Some(next) => Fetch.BodyInit.make(next)
     | None =>
-      switch (Js.Json.stringifyAny({"query": query})) {
-      | Some(next) => Fetch.BodyInit.make(next)
-      | None =>
-        failwith(
-          "Regql: when making the request the query/mutation variables we're malformed. Please check the variables Js.t passed in doesn't hold function values or any values not supported in Json"
-        )
-      }
+      failwith(
+        "Regql: when making the request the query/mutation variables we're malformed. Please check the variables Js.t passed in doesn't hold function values or any values not supported in Json"
+      )
     };
   Js.Promise.(
     Fetch.fetchWithInit(
@@ -38,7 +29,7 @@ let run = (uri, token, query, variables, decoder) => {
       )
     )
     |> then_(Fetch.Response.json)
-    |> then_((value) => resolve(decoder(value)))
-    |> catch((err) => reject @@ ReGqlError(errToString(err)))
+    |> then_((value) => resolve(value))
+    |> catch((err) => reject @@ RegqlError(errToString(err)))
   )
 };

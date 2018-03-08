@@ -2,6 +2,9 @@
   "name": "regql",
   "sources": "src",
   "refmt": 3,
-  "bs-dependencies": ["reason-react", "bs-fetch", "bs-json"],
-  "bsc-flags": ["-bs-no-version-header"]
+  "reason": {
+    "react-jsx": 2
+  },
+  "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
+  "bs-dependencies": ["reason-react", "bs-fetch"]
 }
