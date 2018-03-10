@@ -1,6 +1,11 @@
 module Cache = Map.Make(String);
 
-let empty: Cache.t((int, Js.Json.t, Js.Json.t)) = Cache.empty;
+module type T = {
+  let cache: ref(Cache.t((float, Js.Json.t, Js.Json.t)));
+  let update: Cache.t((float, Js.Json.t, Js.Json.t)) => unit;
+};
+
+let empty: Cache.t((float, Js.Json.t, Js.Json.t)) = Cache.empty;
 
 let clear = () => Cache.empty;
 
@@ -25,7 +30,7 @@ let isCached = (query, variables, cache) =>
   | exception Not_found => false
   };
 
-let get = (query, cache) =>
+let get = (query, cache: Cache.t((float, Js.Json.t, Js.Json.t))) =>
   switch (Cache.find(query, cache)) {
   | result => result
   | exception Not_found => failwith("This is a bug, please report this")

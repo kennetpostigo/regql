@@ -1,4 +1,4 @@
-module Make = (Network: Network.T) => {
+module Make = (Network: Network.T, MCache: Cache.T) => {
   external castResponse : Js.Json.t => {. "data": Js.Json.t} = "%identity";
   type state =
     | NotCalled
@@ -8,10 +8,18 @@ module Make = (Network: Network.T) => {
   type action =
     | Result(Js.Json.t)
     | Error(string);
-  let sendMutation = (uri: string, token: string, query, send) =>
+  let sendMutation = (uri: string, token: string, query, send) => {
+    switch (Cache.isCached(query##query, query##variables, MCache.cache^)) {
+    | true =>
+        let (_ts, value, _vars) = Cache.get(query##query, MCache.cache^);
+        send(Result(value));
+    | false => ()
+  };
     Transport.run(uri, token, query##query, query##variables)
     |> Js.Promise.then_(
          (value) => {
+           let ts = Js.Date.make();
+           MCache.update(Cache.add(query##query, (Js.Date.getTime(ts), value, query##variables), MCache.cache^));
            send(Result(value));
            Js.Promise.resolve()
          }
@@ -22,6 +30,7 @@ module Make = (Network: Network.T) => {
            Js.Promise.resolve()
          }
        );
+  };
   let component = ReasonReact.reducerComponent("Regql");
   let make = (children) => {
     ...component,

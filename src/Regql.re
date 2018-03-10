@@ -1,4 +1,8 @@
 module Make = (Network: Network.T) => {
-  module Mutation = Mutation.Make(Network);
-  module Query = Query.Make(Network);
+  module ClientCache = {
+    let cache = ref(Cache.empty);
+    let update = (nextCache) => cache := nextCache;
+  };
+  module Mutation = Mutation.Make(Network, ClientCache);
+  module Query = Query.Make(Network, ClientCache);
 };
