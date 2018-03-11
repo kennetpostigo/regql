@@ -1,5 +1,11 @@
 module Cache = Map.Make(String);
 
+let addTypename = (str) =>
+  Js.String.replaceByRe(
+    [%re "/{/g"],
+    "{\n\t__typename", str
+  );
+
 module type T = {
   let cache: ref(Cache.t((float, Js.Json.t, Js.Json.t)));
   let update: Cache.t((float, Js.Json.t, Js.Json.t)) => unit;
