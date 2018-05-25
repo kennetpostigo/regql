@@ -11,29 +11,35 @@ module Make = (Network: Network.T, QCache: Cache.T) => {
   type action =
     | Result(Js.Json.t)
     | Error(string);
-    let sendQuery = (uri: string, token: string, query, send) => {
-      switch (Cache.isCached(query##query, query##variables, QCache.cache^)) {
-      | true =>
-          let (_ts, value, _vars) = Cache.get(query##query, QCache.cache^);
-          send(Result(value));
-      | false => ()
-    };
-      Transport.run(uri, token, query##query, query##variables)
-      |> Js.Promise.then_(
-           (value) => {
-             let ts = Js.Date.make();
-             QCache.update(Cache.add(query##query, (Js.Date.getTime(ts), value, query##variables), QCache.cache^));
-             send(Result(value));
-             Js.Promise.resolve()
-           }
-         )
-      |> Js.Promise.catch(
-           (_value) => {
-             send(Error("an error happened"));
-             Js.Promise.resolve()
-           }
-         );
-    };
+  let sendQuery = (uri: string, token: string, query, send) => {
+    Cache.isCached(query##query, query##variables, QCache.cache^) ?
+      {
+        let (_ts, value, _vars) = Cache.get(query##query, QCache.cache^);
+        send(Result(value))
+      } :
+      ();
+    Transport.run(uri, token, query##query, query##variables)
+    |> Js.Promise.then_(
+         (value) => {
+           let ts = Js.Date.make();
+           QCache.update(
+             Cache.add(
+               query##query,
+               (Js.Date.getTime(ts), value, query##variables),
+               QCache.cache^
+             )
+           );
+           send(Result(value));
+           Js.Promise.resolve()
+         }
+       )
+    |> Js.Promise.catch(
+         (_value) => {
+           send(Error("an error happened"));
+           Js.Promise.resolve()
+         }
+       )
+  };
   let component = ReasonReact.reducerComponent("Regql");
   let make = (~query, children) => {
     ...component,
@@ -45,10 +51,8 @@ module Make = (Network: Network.T, QCache: Cache.T) => {
         ReasonReact.Update({...state, response: Loaded(typedResult)})
       | Error(error) => ReasonReact.Update({...state, response: Failed(error)})
       },
-    didMount: ({send}) => {
-      sendQuery(Network.uri, Network.token, query, send) |> ignore;
-      ReasonReact.NoUpdate
-    },
+    didMount: ({send}) =>
+      sendQuery(Network.uri, Network.token, query, send) |> ignore,
     render: ({state}) => children(state.response, query##parse)
   };
 };

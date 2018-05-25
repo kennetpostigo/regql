@@ -9,17 +9,23 @@ module Make = (Network: Network.T, MCache: Cache.T) => {
     | Result(Js.Json.t)
     | Error(string);
   let sendMutation = (uri: string, token: string, query, send) => {
-    switch (Cache.isCached(query##query, query##variables, MCache.cache^)) {
-    | true =>
+    Cache.isCached(query##query, query##variables, MCache.cache^) ?
+      {
         let (_ts, value, _vars) = Cache.get(query##query, MCache.cache^);
-        send(Result(value));
-    | false => ()
-  };
+        send(Result(value))
+      } :
+      ();
     Transport.run(uri, token, query##query, query##variables)
     |> Js.Promise.then_(
          (value) => {
            let ts = Js.Date.make();
-           MCache.update(Cache.add(query##query, (Js.Date.getTime(ts), value, query##variables), MCache.cache^));
+           MCache.update(
+             Cache.add(
+               query##query,
+               (Js.Date.getTime(ts), value, query##variables),
+               MCache.cache^
+             )
+           );
            send(Result(value));
            Js.Promise.resolve()
          }
@@ -29,7 +35,7 @@ module Make = (Network: Network.T, MCache: Cache.T) => {
            send(Error("an error happened"));
            Js.Promise.resolve()
          }
-       );
+       )
   };
   let component = ReasonReact.reducerComponent("Regql");
   let make = (children) => {
