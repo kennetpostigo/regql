@@ -1,6 +1,6 @@
 {
   "name": "regql",
-  "version": "0.5.0-beta.10",
+  "version": "0.5.0-beta.11",
   "description": "reason graphql",
   "main": "index.js",
   "author": "Kennet Postigo <kennetfpostigo@gmail.com>",
@@ -18,11 +18,11 @@
   "devDependencies": {
     "bs-platform": "^3.1.4",
     "bs-fetch": "^0.3.0",
-    "reason-react": "^0.4.1"
+    "reason-react": "^0.4.2"
   },
   "peerDependencies": {
     "bs-fetch": "^0.3.0",
     "graphql_ppx": "^0.2.3",
-    "reason-react": "^0.4.1"
+    "reason-react": "^0.4.2"
   }
 }
