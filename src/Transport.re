@@ -12,7 +12,7 @@ let run = (uri: string, token: string, query: string, variables: Js.Json.t) => {
         {|"Regql: when making the request the query/mutation variables we're
           malformed. Please check the variables Js.t passed in doesn't hold
           function values or any values not supported in Json"
-        |},=-
+        |},
       )
     };
     
