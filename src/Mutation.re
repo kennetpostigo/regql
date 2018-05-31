@@ -38,7 +38,7 @@ module Make = (Network: Network.T, MCache: Cache.T) => {
   };
 
   let component = ReasonReact.reducerComponent("Regql");
-  
+
   let make = children => {
     ...component,
     initialState: () => NotCalled,

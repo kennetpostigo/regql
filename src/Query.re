@@ -42,7 +42,7 @@ module Make = (Network: Network.T, QCache: Cache.T) => {
   };
 
   let component = ReasonReact.reducerComponent("Regql");
-  
+
   let make = (~query, children) => {
     ...component,
     initialState: () => {response: Loading, variables: query##variables},

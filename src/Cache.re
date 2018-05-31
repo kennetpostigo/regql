@@ -16,7 +16,7 @@ let isNewer = (ts1, ts2) => ts1 > ts2;
 
 let add = (key: Cache.key, value, cache) => {
   let (ts, _newValue, vars) = value;
-  
+
   switch (Cache.find(key, cache)) {
   | result =>
     let (currTs, _currValue, currVars) = result;

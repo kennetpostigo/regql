@@ -8,7 +8,7 @@ module Make = (Network: Network.T) => {
       cache := nextCache;
     };
   };
-  
+
   module Mutation = Mutation.Make(Network, ClientCache);
   module Query = Query.Make(Network, ClientCache);
 };

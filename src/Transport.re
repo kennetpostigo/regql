@@ -15,7 +15,7 @@ let run = (uri: string, token: string, query: string, variables: Js.Json.t) => {
         |},
       )
     };
-    
+
   Js.Promise.(
     Fetch.fetchWithInit(
       uri,
