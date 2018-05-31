@@ -1,3 +1,14 @@
+let prepQuery = query =>
+  Js.String.replaceByRe([%bs.re "/}/g"], "__typename\n}\n", query)
+  |> Js.String.replaceByRe([%bs.re "/\\s+/g"], " ")
+  |> Js.String.replaceByRe([%bs.re "/ ,|, /g"], ",")
+  |> Js.String.replaceByRe([%bs.re "/ :|: /g"], ":")
+  |> Js.String.replaceByRe([%bs.re "/{| { /g"], "{")
+  |> Js.String.replaceByRe([%bs.re "/}| } /g"], "}")
+  |> Js.String.replaceByRe([%bs.re "/\\(| \\( /g"], "(")
+  |> Js.String.replaceByRe([%bs.re "/\\)| \\) /g"], ")")
+  |> Js.String.trim;
+
 module Make = (Network: Network.T) => {
   module ClientCache = {
     let cache = ref(Cache.empty);
